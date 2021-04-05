@@ -1,0 +1,366 @@
+{% extends "base.html" %} {% block content %}
+<!--- BEGINING OF Content -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
+></script>
+<script src="https://gw.alipayobjects.com/os/lib/antv/g2/4.1.10/dist/g2.min.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.11.1/dist/data-set.js"></script>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
+/>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <span class="page-title red"><h2>Community 360 - Overview</h2></span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+      <a href="/communityUsers">
+        <div class="banner-block grey">
+          <div class="block-content">
+            <span class="banner-icon fa-stack fa-3x">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-users fa-stack-1x fa-inverse"></i>
+            </span>
+            <div class="banner-content">
+              <div class="sub-title">Active Members</div>
+              <div class="title">{{ icons['activeUsers'] }}</div>
+            </div>
+            <div class="clear-both"></div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+      <div class="banner-block light-green">
+        <div class="block-content">
+          <span class="fa-stack fa-3x">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-tasks fa-stack-1x fa-inverse"></i>
+          </span>
+          <div class="banner-content">
+            <div class="sub-title">Messages Last Month</div>
+            <div class="title" id="post_count">{{ icons['monthlyMessages'] }}</div>
+          </div>
+          <div class="clear-both"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+      <div class="banner-block green">
+        <div class="block-content">
+          <span class="fa-stack fa-3x">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+          </span>
+          <div class="banner-content">
+            <div class="sub-title">Total Community Members</div>
+            <div class="title" id="post_count">{{ icons['totalUsers'] }}</div>
+          </div>
+          <div class="clear-both"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+      <div class="banner-block blue">
+        <div class="block-content">
+          <span class="fa-stack fa-3x">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+          </span>
+          <div class="banner-content">
+            <div class="sub-title">Total Messages</div>
+            <div class="title" id="post_count">{{ icons['totalMessages'] }}</div>
+          </div>
+          <div class="clear-both"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-24">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2 class="panel-title">
+            <i class="fa fa-binoculars"></i> Pageview Metrics
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+      <input
+        type="text"
+        name="daterange"
+        value="02/15/2021 - 03/15/2021"
+        style="width: 100%"
+      />
+    </div>
+  </div>
+  <!-- <div class="row">
+    <div id="pageview-graph-container"></div>
+  </div>   -->
+  <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <h3 style="padding-right: 40px;">Users Joined</h3>
+        <div id="signups-graph-container"></div>
+    </div> 
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <h3>Messages Sent</h3>
+        <div id="posts-graph-container"></div>
+    </div>
+    <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <h3>Topics</h3>
+        <div id="topics-graph-container"></div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <h3>Likes</h3>
+        <div id="likes-graph-container"></div>
+    </div> -->
+  </div>  
+</div>
+<script type="text/javascript">
+
+  const odata = JSON.parse('{{ stats | tojson | safe}}');
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  $("#post_count").text(numberWithCommas(parseInt($("#post_count").text())));
+
+  // const pageview_chart = new G2.Chart({
+  //     container: "pageview-graph-container",
+  //     autoFit: true,
+  //     height: 500,
+  //   });
+  //   pageview_chart.scale({
+  //   views: {
+  //       max: 3500,
+  //       tickInterval: 500,
+  //       nice: true,
+  //       },
+  //   });
+  //   pageview_chart.tooltip({
+  //     showMarkers: false,
+  //   });
+  //   pageview_chart.interval().position('date*views').color("type").adjust("stack");
+  //   pageview_chart.interaction("element-highlight-by-color");
+  //   pageview_chart.legend({
+  //       position: "top",
+  //   });
+
+    const signup_chart = new G2.Chart({
+      container: "signups-graph-container",
+      autoFit: true,
+      height: 500,
+      padding: [20, 40, 20, 40],
+    });
+
+    signup_chart.scale({
+        date: {
+            range: [0, 1],
+        },
+        new_users: {
+            min: 0,
+            nice: true,
+        },
+    });
+
+    // signup_chart.tooltip({
+    //     shared: true,
+    // });
+
+    signup_chart.line().position('date*new_users').label('new_users');
+    signup_chart.point().position('date*new_users');
+
+    const post_chart = new G2.Chart({
+      container: "posts-graph-container",
+      autoFit: true,
+      height: 500,
+      padding: [20, 40, 20, 40],
+    });
+
+    post_chart.scale({
+        date: {
+            range: [0, 1],
+        },
+        messages: {
+            min: 0,
+            nice: true,
+        },
+    });
+
+    post_chart.tooltip({
+        shared: true,
+    });
+
+    post_chart.line().position('date*messages').label('messages');
+    post_chart.point().position('date*messages');
+
+    // const topic_chart = new G2.Chart({
+    //   container: "topics-graph-container",
+    //   autoFit: true,
+    //   height: 500,
+    //   padding: [20, 40, 20, 40],
+    // });
+    // topic_chart.scale({
+    //     date: {
+    //         range: [0, 1],
+    //     },
+    //     topics: {
+    //         min: 0,
+    //         nice: true,
+    //     },
+    // });
+
+    // topic_chart.tooltip({
+    //     shared: true,
+    // });
+
+    // topic_chart.line().position('date*topics').label('topics');
+    // topic_chart.point().position('date*topics');
+
+    // const like_chart = new G2.Chart({
+    //   container: "likes-graph-container",
+    //   autoFit: true,
+    //   height: 500,
+    //   padding: [20, 40, 20, 40],
+    // });
+    // like_chart.scale({
+    //     date: {
+    //         range: [0, 1],
+    //     },
+    //     likes: {
+    //         min: 0,
+    //         nice: true,
+    //     },
+    // });
+
+    // like_chart.tooltip({
+    //     shared: true,
+    // });
+
+    // like_chart.line().position('date*likes').label('likes');
+    // like_chart.point().position('date*likes');
+
+
+  function renderCharts(d) {
+    console.log(d);
+    let end = {"month": d["end"]["_i"].substring(0, 2), "year": d["end"]["_i"].substring(d["end"]["_i"].length-4, d["end"]["_i"].length)};
+    let start = {"month": d["start"]["_i"].substring(0, 2), "year": d["start"]["_i"].substring(d["start"]["_i"].length - 4, d["start"]["_i"].length)};
+    data = odata;
+    // var pageview_data = [];
+    var signup_data = [];
+    var post_data = [];
+    // var topic_data = [];
+    // var like_data = [];
+
+    // for (viewType of data['pageviews']) {
+    //     for (date of viewType["data"]) {
+    //         pageview_data.push({date: date['x'], views: date['y'], type: viewType['label']})
+    //     }
+    // }
+    let signups = JSON.parse('{{ stats | tojson | safe}}')["signups"];
+    // console.log(signups)
+    // console.log(data)
+    let started = false, ended = false;
+    for (date of signups) {
+        // console.log(date);
+        if (date['x'] == start["year"] + "-" + start["month"]) {started = true; ended = false;}
+        if (started && !ended) {signup_data.push({date: date['x'], new_users: date['y']});}
+        if (date['x'] == end["year"] + "-" + end["month"]) { ended = true; started = false; break;}
+    }
+    started = false; ended = false;
+    for (date of data['posts']) {
+        // console.log(date);
+        if (date['x'] == start["year"] + "-" + start["month"]) { started = true; ended = false; }
+        if (started && !ended) { post_data.push({ date: date['x'], messages: date['y'] }); }
+        if (date['x'] == end["year"] + "-" + end["month"]) { ended = true; started = false; break; }
+        // post_data.push({date: date['x'], posts: date['y']})
+    }
+
+    // for (date of data['topics']) {
+    //     topic_data.push({date: date['x'], topics: date['y']})
+    // }
+    
+    // for (date of data['likes']) {
+    //     like_data.push({date: date['x'], likes: date['y']});
+        
+    // }
+
+    // pageview_chart.data(pageview_data);
+    // pageview_chart.render();
+
+    signup_chart.data(signup_data);
+    signup_chart.forceFit();
+    signup_chart.render();
+
+    post_chart.data(post_data);
+    post_chart.render();
+
+    // topic_chart.data(topic_data);
+    // topic_chart.render();
+
+    // like_chart.data(like_data);
+    // like_chart.render();
+  }
+
+  $(function () {
+    $('input[name="daterange"]').daterangepicker(
+      {
+        opens: "left",
+        startDate: "01/01/2021",
+        endDate: "03/15/2021"
+      },
+      function (start, end, label) {
+        console.log(
+          "A new date selection was made: " +
+            start.format("YYYY-MM-DD") +
+            " to " +
+            end.format("YYYY-MM-DD")
+        );
+        $.ajax({
+          type: "POST",
+          url: "/community/fetch/",
+          data: JSON.stringify({
+            data:
+              "start_date=" +
+              start.format("YYYY-MM-DD") +
+              "&end_date=" +
+              end.format("YYYY-MM-DD"),
+          }),
+          contentType: "application/json;charset=UTF-8",
+          success: function (data) {
+            renderCharts({"start": start, "end": end});
+          },
+        });
+    });
+    var drp = $('input[name="daterange"]').data('daterangepicker');
+    $.ajax({
+        type: "POST",
+        url: "/community/fetch/",
+        data: JSON.stringify({
+        data:
+            "start_date=" +
+            drp.startDate.format("YYYY-MM-DD") +
+            "&end_date=" +
+            drp.endDate.format("YYYY-MM-DD"),
+        }),
+        contentType: "application/json;charset=UTF-8",
+        success: function (data) {
+            // console.log(data);
+            renderCharts({ "start": drp.startDate, "end": drp.endDate });
+        },
+    });
+  });
+</script>
+<!--- END  Content -->
+{% endblock %}

@@ -4,7 +4,7 @@ To run:
 
 ```
 git clone https://github.com/TigerGraph-OSS/C360-DiscordDash.git
-cd C360-DiscordDash/DiscordDashboard
+cd C360-DiscordDash/DiscordDash
 touch configs.py
 ```
 
