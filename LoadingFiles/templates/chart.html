@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+            <br><br><br>
             <div id="container" />
             <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
             <script src="https://gw.alipayobjects.com/os/lib/antv/g2/4.1.10/dist/g2.min.js"></script>
@@ -37,7 +38,7 @@
           position: 'middle',
           offset: 0,
           content: (originData) => {
-            return originData.value + '%';
+            return originData.value;// + '%';
           },
           style: {
             stroke: '#fff'
@@ -47,4 +48,5 @@
     chart.render();
 
             </script>
+            <br><br><br>
 {% endblock content %}

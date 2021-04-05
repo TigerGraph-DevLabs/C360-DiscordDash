@@ -26,11 +26,11 @@
                             <div class="block-content">
                                 <span class="banner-icon fa-stack fa-3x">
                                     <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    <i class="fa fa-tasks fa-stack-1x fa-inverse"></i>
                                 </span>
                                 <div class="banner-content">
                                     <div class="title">{{ Github.repoCount }}</div>
-                                    <div class="sub-title">Repos Count</div>
+                                    <div class="sub-title">Messages Last Month</div>
                                 </div>
                                 <div class="clear-both"></div>
                             </div>
@@ -44,11 +44,11 @@
                             <div class="block-content">
                                 <span class="fa-stack fa-3x">
                                 <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-github-alt fa-stack-1x fa-inverse"></i>
+                                <i class="fa fa-user fa-stack-1x fa-inverse"></i>
                             </span>
                                 <div class="banner-content">
                                     <div class="title">{{ Github.repoUsers }}</div>
-                                    <div class="sub-title">Repo Users</div>
+                                    <div class="sub-title">Active Members</div>
                                 </div>
                                 <div class="clear-both"></div>
                             </div>
@@ -61,11 +61,11 @@
                             <div class="block-content">
                                 <span class="fa-stack fa-3x">
                                 <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-star fa-stack-1x fa-inverse"></i>
+                                <i class="fa fa-comments fa-stack-1x fa-inverse"></i>
                             </span>
                                 <div class="banner-content">
                                     <div class="title">{{ Github.repoStars }}</div>
-                                    <div class="sub-title">Repo Stars</div>
+                                    <div class="sub-title">Messages</div>
                                 </div>
                                 <div class="clear-both"></div>
                             </div>
@@ -83,7 +83,7 @@
                             </span>
                                 <div class="banner-content">
                                     <div class="title">{{ Github.repoOwners }}</div>
-                                    <div class="sub-title">Owners Count</div>
+                                    <div class="sub-title">Community Members</div>
                                 </div>
                                 <div class="clear-both"></div>
                             </div>
@@ -93,11 +93,58 @@
                 </div>
             </div>
 
+            <div id="container" />
+            <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+            <script src="https://gw.alipayobjects.com/os/lib/antv/g2/4.1.10/dist/g2.min.js"></script>
+            <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.11.1/dist/data-set.js"></script>
+            <script>
+
+                const data = JSON.parse('{{ ListValues | tojson | safe}}');
+
+                const chart = new G2.Chart({
+                    container: 'container',
+                    autoFit: true,
+                    height: 500,
+                });
+                chart.data(data);
+                chart.axis('value', false);
+                chart.legend({
+                    position: 'right',
+                });
+                chart.tooltip({
+                    shared: true,
+                    showMarkers: false,
+                });
+                chart.interaction('active-region');
+                chart
+                    .interval()
+                    .adjust('stack')
+                    .position('time*value')
+                    .color('type', ['#40a9ff', '#1890ff', '#096dd9', '#0050b3'])
+                    .label('value', (val) => {
+                        if (val < 10) {
+                            return null;
+                        }
+                        return {
+                            position: 'middle',
+                            offset: 0,
+                            content: (originData) => {
+                                return originData.value;// + '%';
+                            },
+                            style: {
+                                stroke: '#fff'
+                            }
+                        };
+                    });
+                chart.render();
+
+            </script>
+
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-github"></i> Top Stared Repos </h3>
+                            <h3 class="panel-title"><i class="fa fa-github"></i> Top Channels </h3>
                         </div>
                         <table class="table table-striped">
                             <thead>
@@ -134,9 +181,9 @@
                                     <li>
                                         <img src="{{ user.avatar }}" class="profile-img pull-left">
                                         <div class="message-block">
-                                            <div><span class="username">{{ user.nameUser }}</span> <span class="message-datetime"><a href="{{ user.idUser }}">Link</a></span>
+                                            <div><span class="username">{{ user.username }}</span> <span class="message-datetime"><!--<a href="{{ user.idUser }}">Link</a>--></span>
                                             </div>
-                                            <div class="message">{{ user.valueStars }}</div>
+                                            <div class="message">{{ user.messages }} Messages</div>
                                         </div>
 
                                     </li>
