@@ -1,3 +1,7 @@
+'''
+Create Graph + Queries
+'''
+
 import pyTigerGraph as tg 
 
 conn = tg.TigerGraphConnection(host="https://discord.i.tgcloud.io",
