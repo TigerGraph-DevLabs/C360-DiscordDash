@@ -46,8 +46,7 @@ conn.graphname = "DiscordGraph"
 conn.apiToken = conn.getToken(conn.createSecret())
 
 '''
-CREATE QUERY getTotalUsers(/* Parameters here */) FOR GRAPH DiscordGraph { 
-  /* Write query logic here */ 
+CREATE QUERY getTotalUsers() FOR GRAPH DiscordGraph { 
     SumAccum<int> @@total = 0;
     Seed = {User.*};
     Res = SELECT s FROM Seed:s
@@ -59,21 +58,7 @@ CREATE QUERY getTotalUsers(/* Parameters here */) FOR GRAPH DiscordGraph {
 '''
 
 '''
-CREATE QUERY getTotalProjects(STRING id) FOR GRAPH DiscordGraph { 
-  /* Write query logic here */ 
-  SumAccum<int> @@total = 0;
-  Seed = {Category.*};
-  Res = SELECT t FROM Seed:s- (CHANNEL_CATEGORY:e)-Channel:t
-  WHERE s.category_id == id
-  ACCUM @@total+=1;
-  
-  PRINT @@total;
-}
-'''
-
-'''
-CREATE QUERY getTotalMessages(/* Parameters here */) FOR GRAPH DiscordGraph { 
-  /* Write query logic here */ 
+CREATE QUERY getTotalMessages() FOR GRAPH DiscordGraph { 
   SumAccum<int> @@total = 0;
   Seed = {Message.*};
   Res = SELECT s FROM Seed:s
@@ -84,27 +69,15 @@ CREATE QUERY getTotalMessages(/* Parameters here */) FOR GRAPH DiscordGraph {
 '''
 
 '''
-CREATE QUERY getTotalChannels(/* Parameters here */) FOR GRAPH DiscordGraph { 
-  /* Write query logic here */ 
-  SumAccum<int> @@total = 0;
-  Seed = {Channel.*};
-  Res = SELECT s FROM Seed:s
-  ACCUM @@total+=1;
-  
-  PRINT @@total;
-}
-'''
-
-'''
-CREATE QUERY getTopUsers() FOR GRAPH DiscordGraph {  
-  SumAccum<int> @totalMessages = 0;
+CREATE QUERY getMostActiveUsers() FOR GRAPH DiscordGraph {  
+  SumAccum<int> @messages = 0;
   
   Seed = {Message.*};
   
   Res = SELECT t FROM Seed:s- (SENDER:e)-User:t 
-        ACCUM t.@totalMessages+=1
-        HAVING t.@totalMessages > 0
-        ORDER BY t.@totalMessages DESC
+        ACCUM t.@messages+=1
+        HAVING t.@messages > 0
+        ORDER BY t.@messages DESC
         LIMIT 100;
   
   PRINT Res;
