@@ -11,7 +11,7 @@ headers = {
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36',
     'accept': 'application/json',
     'accept-encoding': 'gzip, deflate, br',
-    'Api-Key' : '360ff2183c95508261fe9c72469821368d91ddd6f324e5197790a64feab6a1b4',
+    'Api-Key' : '',
     'Api-Username': 'Zrouga'
 }
 
